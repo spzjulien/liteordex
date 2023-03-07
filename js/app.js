@@ -1,3 +1,4 @@
+const coin = "LTC";
 const isProduction = !location.href.includes("signet");
 const ordinalsExplorerUrl = isProduction
   ? "https://ordinals.com"
@@ -70,8 +71,8 @@ async function selectUtxos(utxos, amount, vins, vouts, recommendedFeeRate) {
 
   if (selectedAmount < amount) {
     throw new Error(`Not enough cardinal spendable funds.
-Address has:  ${satToBtc(selectedAmount)} BTC
-Needed:          ${satToBtc(amount)} BTC`);
+Address has:  ${satToBtc(selectedAmount)} ${coin}
+Needed:          ${satToBtc(amount)} ${coin}`);
   }
 
   return selectedUtxos;
@@ -345,7 +346,7 @@ async function* getLatestOrders(limit, nostrLimit = 20, filters = {}) {
       const ord = {
         title: `Buy for ${satToBtc(
           validatedPrice
-        )} BTC ($${satsToFormattedDollarString(
+        )} ${coin} ($${satsToFormattedDollarString(
           validatedPrice,
           await bitcoinPrice
         )})`,
@@ -553,7 +554,7 @@ async function inscriptionPage() {
   document.getElementById("utxo").value = inscription.output;
 
   const utxoValue = satToBtc(inscription["output value"]);
-  document.getElementById("utxoValue").value = `${utxoValue} BTC`;
+  document.getElementById("utxoValue").value = `${utxoValue} ${coin}`;
   document.getElementById("utxoValue").value += ` ($${(
     utxoValue * (await bitcoinPrice)
   ).toFixed(2)})`;
@@ -589,7 +590,7 @@ async function inscriptionPage() {
       const sellerOutput = sellerSignedPsbt.txOutputs[0];
       price = sellerOutput.value;
       const sellerOutputValueBtc = satToBtc(price);
-      const sellPriceText = `${sellerOutputValueBtc} BTC ($${(
+      const sellPriceText = `${sellerOutputValueBtc} ${coin} ($${(
         sellerOutputValueBtc * (await bitcoinPrice)
       ).toFixed(2)})`;
       document.getElementById("btnBuyInscriptionNow").style.display = "revert";
@@ -950,11 +951,11 @@ async function inscriptionPage() {
 
     if (changeValue < 0) {
       throw `Your wallet address doesn't have enough funds to buy this inscription.
-Price:          ${satToBtc(price)} BTC
-Fees:       ${satToBtc(fee + dummyUtxoValue)} BTC
-You have:   ${satToBtc(totalPaymentValue)} BTC
-Required:   ${satToBtc(totalValue - changeValue)} BTC
-Missing:     ${satToBtc(-changeValue)} BTC`;
+Price:          ${satToBtc(price)} ${coin}
+Fees:       ${satToBtc(fee + dummyUtxoValue)} ${coin}
+You have:   ${satToBtc(totalPaymentValue)} ${coin}
+Required:   ${satToBtc(totalValue - changeValue)} ${coin}
+Missing:     ${satToBtc(-changeValue)} ${coin}`;
     }
 
     // Change utxo
@@ -1014,7 +1015,7 @@ See transaction details on <a href="${baseMempoolUrl}/tx/${txId}" target="_blank
     }
 
     const sellerOutputValueBtc = satToBtc(price);
-    const sellPriceText = `${sellerOutputValueBtc} BTC ($${(
+    const sellPriceText = `${sellerOutputValueBtc} ${coin} ($${(
       sellerOutputValueBtc * (await bitcoinPrice)
     ).toFixed(2)})`;
     await displayBuyPsbt(
